@@ -1,0 +1,8 @@
+selenium
+beautifulsoup4
+webdriver-manager
+sentence-transformers
+faiss-cpu
+transformers
+numpy
+llama-stack
