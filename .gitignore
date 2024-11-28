@@ -54,3 +54,4 @@ variables.py
 .venv/
 documentacion/
 auth_plugin.zip
+storage/

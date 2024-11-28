@@ -1,8 +1,10 @@
 selenium
 beautifulsoup4
 webdriver-manager
-sentence-transformers
-faiss-cpu
-transformers
 numpy
 llama-stack
+llama-index
+llama-index-embeddings-huggingface
+llama-index-vector-stores-chroma
+matplotlib
+chromadb
