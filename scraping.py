@@ -133,7 +133,7 @@ def scrape_page(url, base_url):
 
 if __name__ == "__main__":
     # URL inicial (principal)
-    start_url = "https://gps.prismamediosdepago.com/SitePages/Subcategorias.aspx?cid=18"
+    start_url = "https://gps.prismamediosdepago.com/SitePages/Novedades.aspx"
     base_url = "https://gps.prismamediosdepago.com"
 
     # Iniciar el scraping
