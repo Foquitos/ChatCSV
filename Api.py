@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Form
 from pydantic import BaseModel
 import uvicorn
 
@@ -17,17 +17,13 @@ chat_csv.Usar_embedding_armado()
 chat_csv.Prompts()          # Configura los prompts
 chat_csv.Armar_Query()      # Configura el motor de consulta
 
-# Modelo para las solicitudes POST
-class QueryRequest(BaseModel):
-    query: str
-
 @app.post("/consultar/")
-def consultar(request: QueryRequest):
+def consultar(query: str = Form(...)):
     """
-    Endpoint para realizar consultas a través del ChatCSV.
+    Endpoint para realizar consultas a través del ChatCSV usando form-data.
     """
     try:
-        response = chat_csv.Realizar_consulta(request.query)
+        response = chat_csv.Realizar_consulta(query)
         return {"response": response}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

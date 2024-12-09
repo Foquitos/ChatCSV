@@ -11,3 +11,4 @@ chromadb
 einops
 requests_ntlm
 llama-index-llms-anthropic
+python-multipart
