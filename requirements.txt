@@ -9,3 +9,5 @@ llama-index-vector-stores-chroma
 matplotlib
 chromadb
 einops
+requests_ntlm
+llama-index-llms-anthropic

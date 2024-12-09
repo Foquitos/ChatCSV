@@ -3,23 +3,46 @@ from llama_index.core.response.notebook_utils import display_response
 from llama_index.llms.ollama import Ollama
 from llama_index.embeddings.huggingface import HuggingFaceEmbedding
 from llama_index.vector_stores.chroma import ChromaVectorStore
+from llama_index.llms.anthropic import Anthropic
 import chromadb
 import os
 
-class ChatCSV:
-    def __init__(self):
-        self.storage= 'storage'
-        
-        self.embedding = HuggingFaceEmbedding(
-            model_name="nomic-ai/nomic-embed-text-v1.5", 
-            trust_remote_code=True,
-            query_instruction="search_query: ",  # Prefijo para consultas
-            text_instruction="search_document: "  # Prefijo para documentos
-        )
-        self.llm=Ollama(model="llama3.2:3b", request_timeout=360.0,temperature=0.1)
 
-        Settings.embed_model = self.embedding
-        Settings.llm = self.llm
+os.environ["ANTHROPIC_API_KEY"] = "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"
+# os.environ["OPENAI_API_KEY "] = ""
+
+class ChatCSV:
+    def __init__(self,local:bool=False):
+        self.storage= 'storage'
+        self.local = local
+        
+        if self.local:
+            self.embedding = HuggingFaceEmbedding(
+                model_name="nomic-ai/nomic-embed-text-v1.5", 
+                trust_remote_code=True,
+                query_instruction="search_query: ",  # Prefijo para consultas
+                text_instruction="search_document: "  # Prefijo para documentos
+            )
+            Settings.embed_model = self.embedding
+
+            self.llm=Ollama(model="llama3.2:3b", request_timeout=360.0,temperature=0.1)
+            Settings.llm = self.llm
+        else:
+            #TODO BORRAR DESPUES
+            self.embedding = HuggingFaceEmbedding(
+                model_name="nomic-ai/nomic-embed-text-v1.5", 
+                trust_remote_code=True,
+                query_instruction="search_query: ",  # Prefijo para consultas
+                text_instruction="search_document: "  # Prefijo para documentos
+            )
+            Settings.embed_model = self.embedding
+            #TODO
+            
+            # tokenizer = Anthropic().tokenizer
+            # Settings.tokenizer = tokenizer
+            self.llm = Anthropic(model="claude-3-5-haiku-20241022", temperature=0.2)
+            Settings.llm = self.llm
+
     
         db= chromadb.PersistentClient(path=self.storage)
 
@@ -59,7 +82,7 @@ class ChatCSV:
             "{context_str}\n"
             "---------------------\n"
             "Dado la informacion brindada en la documentacion, y no tu conocimiento a priori,"
-            "Responde la pregunta del operador: {query_str}\n"
+            "Responde la pregunta del humano: {query_str}\n"
         )
 
         self.refine_prompt_str = (
@@ -134,9 +157,9 @@ class ChatCSV:
     def Armar_Query(self):
         self.query_engine = self.index.as_query_engine(
                 text_qa_template=self.text_qa_template,
-                refine_template=self.refine_template,
+                # refine_template=self.refine_template,
                 llm=self.llm,
-                response_mode='refine'
+                # response_mode='refine'
             )
 
     def Realizar_consulta(self,query):
