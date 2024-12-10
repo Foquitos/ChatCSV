@@ -6,6 +6,7 @@ from llama_index.vector_stores.chroma import ChromaVectorStore
 from llama_index.llms.anthropic import Anthropic
 import chromadb
 import os
+import datetime
 
 
 os.environ["ANTHROPIC_API_KEY"] = "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"
@@ -163,5 +164,18 @@ class ChatCSV:
             )
 
     def Realizar_consulta(self,query):
+        carpeta_log = r'E:\ChatCSV\Log'
+        os.makedirs(carpeta_log, exist_ok=True)
+        fecha = datetime.datetime.strftime(datetime.datetime.now(),'%Y-%m-%d_%H-%M-%S')
+        
+        consulta_path = os.path.join(carpeta_log, f'{fecha}_query.txt')
+        with open(consulta_path, mode='w', encoding='utf-8') as file:
+            file.write(query)
+        
         response = self.query_engine.query(query)
+        
+        response_path = os.path.join(carpeta_log, f'{fecha}_response.txt')
+        with open(response_path, mode='w', encoding='utf-8') as file:
+            file.write(str(response))
+
         return str(response)
