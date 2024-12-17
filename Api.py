@@ -12,7 +12,7 @@ app = FastAPI()
 chat_csv = ChatCSV()
 
 # Inicializar los métodos necesarios
-# chat_csv.Armar_embedding()  # Prepara el embedding (esto puede ser costoso si no tienes un índice ya creado)
+# chat_csv.Armar_embedding('documentacion depurada')  # Prepara el embedding (esto puede ser costoso si no tienes un índice ya creado)
 chat_csv.Usar_embedding_armado()
 chat_csv.Prompts()          # Configura los prompts
 chat_csv.Armar_Query()      # Configura el motor de consulta

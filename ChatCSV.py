@@ -30,18 +30,19 @@ class ChatCSV:
             Settings.llm = self.llm
         else:
             #TODO BORRAR DESPUES
-            self.embedding = HuggingFaceEmbedding(
-                model_name="nomic-ai/nomic-embed-text-v1.5", 
-                trust_remote_code=True,
-                query_instruction="search_query: ",  # Prefijo para consultas
-                text_instruction="search_document: "  # Prefijo para documentos
-            )
+            # self.embedding = HuggingFaceEmbedding(
+            #     model_name="nomic-ai/nomic-embed-text-v1.5", 
+            #     trust_remote_code=True,
+            #     query_instruction="search_query: ",  # Prefijo para consultas
+            #     text_instruction="search_document: "  # Prefijo para documentos
+            # )
+            self.embedding = HuggingFaceEmbedding(model_name="BAAI/bge-m3")
             Settings.embed_model = self.embedding
             #TODO
             
             # tokenizer = Anthropic().tokenizer
             # Settings.tokenizer = tokenizer
-            self.llm = Anthropic(model="claude-3-5-haiku-20241022", temperature=0.2)
+            self.llm = Anthropic(model="claude-3-5-haiku-20241022", temperature=0.3)
             Settings.llm = self.llm
 
     
@@ -62,8 +63,8 @@ class ChatCSV:
             storage_context=self.storage_context
         )
     
-    def Armar_embedding(self):
-        documents = SimpleDirectoryReader('documentacion').load_data()
+    def Armar_embedding(self,carpeta):
+        documents = SimpleDirectoryReader(carpeta).load_data()
         # Creación o carga del índice
         # Crear un nuevo índice si no existe almacenamiento previo
         self.index = VectorStoreIndex.from_documents(
@@ -82,7 +83,7 @@ class ChatCSV:
             "---------------------\n"
             "{context_str}\n"
             "---------------------\n"
-            "Dado la informacion brindada en la documentacion, y no tu conocimiento a priori,"
+            "Dado la informacion brindada en la documentacion, y no tu conocimiento a priori, sin informar que se ha utilzado informacion de la documentacion al humano.\n"
             "Responde la pregunta del humano: {query_str}\n"
         )
 
@@ -95,6 +96,7 @@ class ChatCSV:
             "Dado la nueva documentacion, Refina la respuesta original para mejor "
             "respondiendo la pregunta: {query_str}. "
             "Si el contexto no es util, devuelve la respuesta original.\n"
+            "No avises al humano acerca de la refinacion de la respuesta ni del uso de la documentacion\n"
             "Respuesta original: {existing_answer}"
         )
 
@@ -158,9 +160,9 @@ class ChatCSV:
     def Armar_Query(self):
         self.query_engine = self.index.as_query_engine(
                 text_qa_template=self.text_qa_template,
-                # refine_template=self.refine_template,
+                refine_template=self.refine_template,
                 llm=self.llm,
-                # response_mode='refine'
+                response_mode='refine'
             )
 
     def Realizar_consulta(self,query):
