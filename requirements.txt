@@ -13,3 +13,5 @@ requests_ntlm
 llama-index-llms-anthropic
 python-multipart
 docx2txt
+python-jose
+passlib
