@@ -8,6 +8,8 @@
 
 ### Cambiar contraseña
 
+Permite cambiar la contraseña a algun usuario seleccionado, o generar la misma en caso de que el documento este en la nomina y no tenga registrado alguna otra
+
 **Endpoint:**  
 `POST /change_password/`
 
@@ -46,8 +48,7 @@ Un diccionario con los siguientes datos:
 
 **Uso del Token:**  
 Incluye el token en el encabezado de autorización en las siguientes solicitudes:  
-```http
-Authorization: Bearer <token>
+`Authorization: Bearer <token>`
 
 ### Realizar consulta
 
