@@ -217,32 +217,45 @@ async def login_for_access_token(
 @app.post("/consultar/")
 async def consultar(
     query: str = Form(...),
+    campana: str = Form(...),
     current_user: User = Depends(get_current_user)
 ):
     """
     Endpoint para realizar consultas a través del ChatCSV usando form-data.
     Requiere autenticación.
     """
-    try:
-        response = chat_csv.Realizar_consulta(query)
-        return {"response": response, "user": current_user.usuario}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+    
+    campana = campana.lower()
+    if campana == 'csv':
+        try:
+                response = chat_csv.Realizar_consulta(query)
+                return {"response": response, "user": current_user.usuario}
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=str(e))
+    else:
+            raise HTTPException(status_code=500, detail='Campaña no valida')
 
 @app.post("/consultar_contexto/")
 async def consultar_contexto(
     query: str = Form(...),
+    campana: str = Form(...),
     current_user: User = Depends(get_current_user)
 ):
     """
     Endpoint para realizar consultas a través del ChatCSV usando form-data.
     Requiere autenticación.
     """
-    try:
-        response = chat_csv.Realizar_consulta_con_contexto(query)
-        return {"response": response['response'],'context':response['context'], "user": current_user.usuario}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+    
+    campana = campana.lower()
+    if campana == 'csv':
+        try:
+            response = chat_csv.Realizar_consulta_con_contexto(query)
+            return {"response": response['response'],'context':response['context'], "user": current_user.usuario}
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=str(e))
+    else:
+        raise HTTPException(status_code=500, detail='Campaña no valida')
+
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=6000)

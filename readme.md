@@ -63,6 +63,7 @@ Permite realizar una consulta basada en la información disponible
 |-------------|-----------|-----------------------------------------|
 | `bearer Token`  | `string`     | **Requerido.** Token de autenticación.  |
 | `query`  | `string`  | **Requerido.** Consulta a realizar.  |
+| `campana`  | `string`  | **Requerido.** Campaña a la cual se le quiere realizar consultas, actualmente solo CSV.  |
 
 **Respuesta:**  
 Un diccionario con los siguientes datos:  
@@ -82,6 +83,7 @@ Proporciona información adicional sobre el contexto utilizado para responder la
 |-------------|-----------|-----------------------------------------|
 | `bearer Token`  | `string`     | **Requerido.** Token de autenticación.  |
 | `query`  | `string`  | **Requerido.** Consulta a realizar.  |
+| `campana`  | `string`  | **Requerido.** Campaña a la cual se le quiere realizar consultas, actualmente solo CSV.  |
 
 **Respuesta:**  
 Un diccionario con los siguientes datos:  
