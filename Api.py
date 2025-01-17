@@ -229,5 +229,20 @@ async def consultar(
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+@app.post("/consultar_contexto/")
+async def consultar_contexto(
+    query: str = Form(...),
+    current_user: User = Depends(get_current_user)
+):
+    """
+    Endpoint para realizar consultas a través del ChatCSV usando form-data.
+    Requiere autenticación.
+    """
+    try:
+        response = chat_csv.Realizar_consulta_con_contexto(query)
+        return {"response": response['response'],'context':response['context'], "user": current_user.usuario}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=6000)

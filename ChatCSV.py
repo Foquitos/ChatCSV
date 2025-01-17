@@ -181,3 +181,42 @@ class ChatCSV:
             file.write(str(response))
 
         return str(response)
+    
+    def Realizar_consulta_con_contexto(self, query):
+        """
+        Realiza una consulta y devuelve la respuesta junto con el contexto (source_nodes).
+        """
+        carpeta_log = r'E:\ChatCSV\Log'
+        os.makedirs(carpeta_log, exist_ok=True)
+        fecha = datetime.datetime.strftime(datetime.datetime.now(), '%Y-%m-%d_%H-%M-%S')
+
+        # Guardar la consulta
+        consulta_path = os.path.join(carpeta_log, f'{fecha}_query.txt')
+        with open(consulta_path, mode='w', encoding='utf-8') as file:
+            file.write(query)
+
+        # Realizar la consulta utilizando llamaindex
+        response = self.query_engine.query(query)
+
+        # Extraer source_nodes como contexto
+        try:
+            source_nodes = response.source_nodes  # Ajustar según la estructura real del objeto de respuesta
+            context = "\n".join(
+                f"Documento: {node.metadata['file_name']}, Texto: {node.text}" for node in source_nodes
+            )
+        except AttributeError:
+            context = "No se pudo obtener el contexto debido a un error en el formato de respuesta."
+        except KeyError:
+            context = "No se proporcionaron source_nodes en la respuesta."
+
+        # Guardar la respuesta
+        response_path = os.path.join(carpeta_log, f'{fecha}_response.txt')
+        with open(response_path, mode='w', encoding='utf-8') as file:
+            file.write(str(response))
+
+        # Guardar el contexto
+        contexto_path = os.path.join(carpeta_log, f'{fecha}_context.txt')
+        with open(contexto_path, mode='w', encoding='utf-8') as file:
+            file.write(context)
+
+        return {"response": str(response), "context": context}

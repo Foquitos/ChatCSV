@@ -49,5 +49,16 @@ returns: diccionario con token y tipo de token
 | `bearer Token`      | `string` | **Required**. Token de autenticacion |
 | `query`|`string`|**Required**. Consulta a realizar|
 
-returns: Json con response, la respuesta a la pregunta
+returns: Json con response, la respuesta a la pregunta y el user, usuario que la realizo
 
+
+```http
+  Post /consultar/
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `bearer Token`      | `string` | **Required**. Token de autenticacion |
+| `query`|`string`|**Required**. Consulta a realizar|
+
+returns: Json con response, la respuesta a la pregunta, context, con toda la informacio que se utilizo para la consulta y el user, usuario que la realizo
