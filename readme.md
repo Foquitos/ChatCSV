@@ -1,64 +1,95 @@
-#Api ChatCSV
-
-
 # Mera Chat
 
-Este proyecto esta ideado para mediante RAG poder realizar consultas en lenguaje natural acerca de la informacion de cada campaña con tal de, ante una duda en llamado, poder contestarla basandose en la documentacion de la forma mas exacta
+**Mera Chat** es un proyecto diseñado para utilizar **Retrieval-Augmented Generation (RAG)** con el fin de realizar consultas en lenguaje natural sobre la información de cada campaña. Esto permite responder con precisión y rapidez a cualquier duda basada en la documentación relevante.
+
+---
 
 ## API Reference
 
-#### Cambiar contraseña
+### Cambiar contraseña
 
+**Endpoint:**  
+`POST /change_password/`
+
+**Parámetros:**
+
+| Nombre         | Tipo      | Descripción                                               |
+|----------------|-----------|-----------------------------------------------------------|
+| `documento`    | `int`     | **Requerido.** Documento del usuario a modificar.         |
+| `password`     | `string`  | **Requerido.** Contraseña actual, o vacío si no la tiene. |
+| `new_password` | `string`  | **Requerido.** Nueva contraseña.                          |
+
+**Respuesta:**  
+Mensaje de confirmación en caso de éxito.
+
+---
+
+### Obtener token
+
+La autenticación se realiza mediante **JSON Web Token (JWT)**.  
+Para iniciar sesión, se debe realizar una primera llamada con credenciales válidas. Esto generará un token que puede ser utilizado para acceder a los demás recursos de la API durante la sesión.
+
+**Endpoint:**  
+`POST /token/`
+
+**Parámetros:**
+
+| Nombre      | Tipo      | Descripción                             |
+|-------------|-----------|-----------------------------------------|
+| `username`  | `int`     | **Requerido.** Nombre de usuario o ID.  |
+| `password`  | `string`  | **Requerido.** Contraseña del usuario.  |
+
+**Respuesta:**  
+Un diccionario con los siguientes datos:  
+- `token`: Token generado.  
+- `token_type`: Tipo de token (por ejemplo, "Bearer").  
+
+**Uso del Token:**  
+Incluye el token en el encabezado de autorización en las siguientes solicitudes:  
 ```http
-  Post /change_password/
-```
-
-| Parameter | Type     | Description                |
-| :-------- | :------- | :------------------------- |
-| `documento` | `int` | **Required**. Documento del usuario a ser modificado |
-| `password`  | `string`|**Required**. Contraseña actual, o vacio en caso de no tener una|
-| `new_password`|`string`|**Required**. Nueva contraseña|
-
-returns: Mesaje de satifactorio
-
-#### Obtener token
-
-La autenticación se realiza a través de JSON Web Token: https://jwt.io/introduction/. Una primer llamada de autenticación de credenciales devolverá un Token, que por la duración de la sesión podrá ser utilizado para consumir la información de la API.
-Una vez obtenido el Token, basta incluirlo en llamadas posteriores en la cabecera Authorization (Authorization header), utilizando el schema Bearer.
 Authorization: Bearer <token>
 
-```http
-  Post /token/
-```
+### Realizar consulta
 
-| Parameter | Type     | Description                       |
-| :-------- | :------- | :-------------------------------- |
-| `username`  | `int` | **Required**. Id of item to fetch |
-| `password`  | `string`|**Required**.
+Permite realizar una consulta basada en la información disponible
 
-returns: diccionario con token y tipo de token
+**Endpoint:**  
+`POST /consultar/`
 
-#### Realizar consulta
+**Parámetros:**
 
-```http
-  Post /consultar/
-```
+| Nombre      | Tipo      | Descripción                             |
+|-------------|-----------|-----------------------------------------|
+| `bearer Token`  | `string`     | **Requerido.** Token de autenticación.  |
+| `query`  | `string`  | **Requerido.** Consulta a realizar.  |
 
-| Parameter | Type     | Description                       |
-| :-------- | :------- | :-------------------------------- |
-| `bearer Token`      | `string` | **Required**. Token de autenticacion |
-| `query`|`string`|**Required**. Consulta a realizar|
+**Respuesta:**  
+Un diccionario con los siguientes datos:  
+- `response`: Respuesta a la consulta.  
+- `user`: Usuario que realizó la consulta.  
 
-returns: Json con response, la respuesta a la pregunta y el user, usuario que la realizo
+### Realizar consulta con contexto
 
+Proporciona información adicional sobre el contexto utilizado para responder la consulta
 
-```http
-  Post /consultar/
-```
+**Endpoint:**  
+`POST /consultar_contexto/`
 
-| Parameter | Type     | Description                       |
-| :-------- | :------- | :-------------------------------- |
-| `bearer Token`      | `string` | **Required**. Token de autenticacion |
-| `query`|`string`|**Required**. Consulta a realizar|
+**Parámetros:**
 
-returns: Json con response, la respuesta a la pregunta, context, con toda la informacio que se utilizo para la consulta y el user, usuario que la realizo
+| Nombre      | Tipo      | Descripción                             |
+|-------------|-----------|-----------------------------------------|
+| `bearer Token`  | `string`     | **Requerido.** Token de autenticación.  |
+| `query`  | `string`  | **Requerido.** Consulta a realizar.  |
+
+**Respuesta:**  
+Un diccionario con los siguientes datos:  
+- `response`: Respuesta a la consulta.  
+- `context`: Información utilizada para generar la respuesta.  
+- `user`: Usuario que realizó la consulta.  
+
+## Notas adicionales
+
+- Asegúrate de mantener tu token seguro, ya que este permite acceso a los recursos de la API.  
+- La contraseña debe cumplir con las políticas de seguridad definidas para garantizar la protección de los usuarios.  
+- Consulta la documentación completa o contacta al equipo de soporte en caso de dudas.
