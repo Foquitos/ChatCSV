@@ -1,30 +1,30 @@
-from fastapi import FastAPI, HTTPException, Form, Depends, status
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-from pydantic import BaseModel
-from datetime import datetime, timedelta, timezone  
-from jose import JWTError, jwt
-from passlib.context import CryptContext
 import uvicorn
-from typing import Optional
-from sqlalchemy import create_engine
-from Variables import connection_string
 import pandas as pd
-from sqlalchemy import text
-# Importar la clase ChatCSV
+
 from ChatCSV import ChatCSV
+from typing import Optional
+from sqlalchemy import text
+from pydantic import BaseModel
+from jose import JWTError, jwt
+from sqlalchemy import create_engine
+from Variables import connection_string, SECRET_KEY
+from datetime import datetime, timedelta, timezone  
+from fastapi import FastAPI, HTTPException, Form, Depends, status
 
-engine = create_engine(connection_string)
-# Configuración de seguridad
-SECRET_KEY = "tu_clave_secreta_muy_segura"  # Cámbiala por una clave segura
-ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
+from passlib.context import CryptContext
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 
-# Modelo de usuario
 class User(BaseModel):
     usuario: int
     Nombre: Optional[str] = None
     legajo: Optional[str] = None
     password: Optional[str] = None    
+engine = create_engine(connection_string)
+# Configuración de seguridad
+ALGORITHM = "HS256"
+ACCESS_TOKEN_EXPIRE_MINUTES = 30
+
+# Modelo de usuario
 
 
 # Configuración de password hashing
@@ -255,6 +255,15 @@ async def consultar_contexto(
             raise HTTPException(status_code=500, detail=str(e))
     else:
         raise HTTPException(status_code=500, detail='Campaña no valida')
+
+
+@app.post("/refresh_embedding/")
+async def consultar_contexto(
+    campana: str = Form(...),
+    current_user: User = Depends(get_current_user)
+):
+    lista_refresh = chat_csv.refresh_embedding(campana)
+    return {'quantity':len(lista_refresh),'campana':campana, "user": current_user.usuario, 'status':'Completed'}
 
 
 if __name__ == "__main__":

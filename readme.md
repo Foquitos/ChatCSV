@@ -91,6 +91,27 @@ Un diccionario con los siguientes datos:
 - `context`: Información utilizada para generar la respuesta.  
 - `user`: Usuario que realizó la consulta.  
 
+### Refrescar documentacion
+
+Refresca la informacion de la documentacion que se encuentra en la carpeta "\\narnia\Command\ChatBot" y buscando la campaña seleccionada
+
+**Endpoint:**  
+`POST /refresh_embedding/`
+
+**Parámetros:**
+
+| Nombre      | Tipo      | Descripción                             |
+|-------------|-----------|-----------------------------------------|
+| `bearer Token`  | `string`     | **Requerido.** Token de autenticación.  |
+| `campana`  | `string`  | **Requerido.** Campaña a la cual se le quiere refrescar la documentacion, actualmente solo CSV.  |
+
+**Respuesta:**  
+Un diccionario con los siguientes datos:  
+- `quantity`: Cantidad de archivos actualizados.  
+- `campana`: Campaña a la que fue actualizada la informacion.  
+- `user`: Usuario que realizó la consulta.  
+- `status`: Estado con el que finaliza.  
+
 ## Notas adicionales
 
 - Asegúrate de mantener tu token seguro, ya que este permite acceso a los recursos de la API.  

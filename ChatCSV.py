@@ -220,3 +220,14 @@ class ChatCSV:
             file.write(context)
 
         return {"response": str(response), "context": context}
+
+    def refresh_embedding(self,carpeta):
+        os.path.join(r'\\narnia\Command\ChatBot')
+        documents = SimpleDirectoryReader(carpeta).load_data()
+        res = self.index.refresh_ref_docs(documents)
+        self.index.storage_context.persist(self.storage)
+        
+        self.Prompts()
+        self.Armar_Query()
+        
+        return res
