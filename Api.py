@@ -1,3 +1,4 @@
+import os
 import uvicorn
 import pandas as pd
 
@@ -7,7 +8,6 @@ from sqlalchemy import text
 from pydantic import BaseModel
 from jose import JWTError, jwt
 from sqlalchemy import create_engine
-from Variables import connection_string, SECRET_KEY
 from datetime import datetime, timedelta, timezone  
 from fastapi import FastAPI, HTTPException, Form, Depends, status
 
@@ -19,7 +19,7 @@ class User(BaseModel):
     Nombre: Optional[str] = None
     legajo: Optional[str] = None
     password: Optional[str] = None    
-engine = create_engine(connection_string)
+engine = create_engine(os.environ.get('connection_string'))
 # Configuración de seguridad
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
@@ -82,7 +82,7 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = timedel
     to_encode = data.copy()
     expire = datetime.now(timezone.utc) + expires_delta
     to_encode.update({"exp": expire})
-    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    encoded_jwt = jwt.encode(to_encode, os.environ.get('SECRET_KEY'), algorithm=ALGORITHM)
     return encoded_jwt
 
 async def get_current_user(token: str = Depends(oauth2_scheme)):
@@ -92,7 +92,7 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
         headers={"WWW-Authenticate": "Bearer"},
     )
     try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        payload = jwt.decode(token, os.environ.get('SECRET_KEY'), algorithms=[ALGORITHM])
         username: int = payload.get("sub")
         if username is None:
             raise credentials_exception

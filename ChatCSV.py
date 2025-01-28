@@ -1,5 +1,4 @@
 from llama_index.core import  VectorStoreIndex, SimpleDirectoryReader, StorageContext, Settings,ChatPromptTemplate
-from llama_index.core.response.notebook_utils import display_response
 from llama_index.llms.ollama import Ollama
 from llama_index.embeddings.huggingface import HuggingFaceEmbedding
 from llama_index.vector_stores.chroma import ChromaVectorStore
@@ -9,7 +8,6 @@ import os
 import datetime
 
 
-os.environ["ANTHROPIC_API_KEY"] = "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"
 # os.environ["OPENAI_API_KEY "] = ""
 
 class ChatCSV:
