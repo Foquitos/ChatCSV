@@ -219,9 +219,9 @@ class ChatCSV:
 
         return {"response": str(response), "context": context}
 
-    def refresh_embedding(self,carpeta):
-        os.path.join(r'\\narnia\Command\ChatBot')
-        documents = SimpleDirectoryReader(carpeta).load_data()
+    def refresh_embedding(self,campaña):
+        documentacion = os.path.join(r'\\narnia\Command\ChatBot',campaña,'Documentacion')
+        documents = SimpleDirectoryReader(documentacion).load_data()
         res = self.index.refresh_ref_docs(documents)
         self.index.storage_context.persist(self.storage)
         
